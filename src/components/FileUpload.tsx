@@ -8,13 +8,33 @@ interface FileUploadProps {
 
 const FileUpload: React.FC<FileUploadProps> = ({ onFileChange }) => {
   const onDrop = useCallback(
-    (acceptedFiles: File[]) => {
+    async (acceptedFiles: File[]) => {
       const file = acceptedFiles[0] || null;
-      onFileChange(file);
+
+      if (file) {
+        const formData = new FormData();
+        formData.append('file', file);
+
+        try {
+          const response = await fetch('http://localhost:3000/api/extract', {
+            method: 'POST',
+            body: formData,
+          });
+
+          if (response.ok) {
+            const result = await response.json();
+            console.log('Extracted text:', result.text);
+            onFileChange(file);
+          } else {
+            console.error('Error extracting text:', response.statusText);
+          }
+        } catch (error) {
+          console.error('Error:', error);
+        }
+      }
     },
     [onFileChange]
   );
-
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
     accept: {
