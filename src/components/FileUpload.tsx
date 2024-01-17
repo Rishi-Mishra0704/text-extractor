@@ -24,36 +24,8 @@ const FileUpload: React.FC<FileUploadProps> = ({ onFileChange }) => {
           });
 
           if (response.ok) {
-            const { text: extractedText } = await response.json();
+            console.log('Response:', response);
 
-            // Use OpenAI for processing in the browser
-            const openaiResponse = await fetch('https://api.openai.com/v1/chat/completions', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/text',
-                'Authoriaztion': 'Bearer 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', // TODO: Replace with your API key
-              },
-              body: JSON.stringify({
-                messages: [
-                  { role: 'system', content: 'You are a helpful assistant.' },
-                  { role: 'user', content: extractedText },
-                ],
-                model: 'gpt-3.5-turbo',
-              }),
-            });
-
-            if (openaiResponse.ok) {
-              const openaiResult = await openaiResponse.json();
-              console.log('OpenAI response:', openaiResult.choices[0].message.content);
-
-              // Update state and pass processed data to parent component
-              setProcessedData(openaiResult.choices[0].message.content);
-              onFileChange(file, openaiResult.choices[0].message.content);
-            } else {
-              console.error('Error calling OpenAI:', openaiResponse.statusText);
-            }
-          } else {
-            console.error('Error extracting text:', response.statusText);
           }
         } catch (error) {
           console.error('Error:', error);
