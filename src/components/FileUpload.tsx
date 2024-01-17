@@ -16,7 +16,7 @@ const FileUpload: React.FC<FileUploadProps> = ({ onFileChange }) => {
         formData.append('file', file);
 
         try {
-          const response = await fetch('http://localhost:3000/api/extract', {
+          const response = await fetch('http://localhost:8000/extract', {
             method: 'POST',
             body: formData,
           });
