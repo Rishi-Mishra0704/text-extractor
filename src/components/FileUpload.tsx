@@ -24,7 +24,8 @@ const FileUpload: React.FC<FileUploadProps> = ({ onFileChange }) => {
           });
 
           if (response.ok) {
-            console.log('Response:', response);
+            const result = await response.json();
+            console.log('Extracted text:', result.text);
 
           }
         } catch (error) {
